@@ -1,17 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/mobile/HelloWorld'
-// import MobilePage from '@/components/mobile/mobilePage'
+import AndroidJs from '@/components/mobile/AndroidJs'
+import MobilePage from  '@/components/mobile/MobilePage'
 
 Vue.use(Router)
 
 let router = new Router({
   routes: [
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
-    }
+      path : '/',
+      name : 'MobilePage',
+      component : MobilePage
+    },
+    {
+      path: '/AndroidJs',
+      name: 'AndroidJs',
+      component: AndroidJs
+    },
+
   ]
 })
 

@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    name: 'pc版',
+    name: 'pc',
     data () {
       return {
         msg: 'HelloWorld,I am PC'

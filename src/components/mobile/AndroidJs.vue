@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    name: '手机版',
+    name: 'phone',
     data () {
       return {
         msg: 'HelloWorld,I am mobile'
