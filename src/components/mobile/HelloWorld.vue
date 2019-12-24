@@ -1,7 +1,7 @@
 <template>
   <div class="mobile">
     <h1>{{ msg }}</h1>
-    <div><input type="button" value="打招呼" onclick="androidJs.showToast('我是h5')"/></div>
+    <div><input type="button" value="打招呼" onclick="androidJs.showToast('我是一个h5')"/></div>
   </div>
 </template>
 
@@ -15,10 +15,14 @@
     },
     mounted () {
       window.androidCallJs = this.androidCallJs;
+      window.androidCallReturn = this.androidCallReturn;
     },
     methods : {
       androidCallJs(androidMsg){
-        alert(androidMsg)
+        alert(androidMsg);
+      },
+      androidCallReturn(){
+        return "99999";
       }
     }
   }
