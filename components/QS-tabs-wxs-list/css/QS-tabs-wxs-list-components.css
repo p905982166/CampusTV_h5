@@ -1,0 +1,109 @@
+view,
+scroll-view,
+swiper,
+swiper-item,
+cover-view,
+cover-image,
+icon,
+text,
+rich-text,
+progress,
+button,
+checkbox,
+form,
+input,
+label,
+radio,
+slider,
+switch,
+textarea,
+navigator,
+audio,
+camera,
+image,
+video,
+picker-view,
+picker-view-column {
+	box-sizing: border-box;
+}
+
+.container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.scrollView {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.scroll-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	padding: 30rpx;
+}
+
+.scroll-container.freeze {
+	height: 100%;
+	overflow: hidden;
+}
+
+.scroll-item {
+	width: 100%;
+	
+	background-color: white;
+	border-radius: 8px;
+	display: flex;
+	flex-direction: column;
+	margin-bottom: 35rpx;
+	
+}
+
+.scroll-item-detail {
+	width: 100%;
+	padding: 28rpx;
+	
+	display: flex;
+	flex-direction: row;
+	margin-bottom: 5rpx;
+	
+}
+
+.scroll-item-detail-text {
+	width: 74%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	font-size: 17px;
+	color: #222222;
+}
+
+.scroll-item-detail-image {
+	display: flex;
+	border-radius: 8px;
+	height: 100rpx;
+	width: 26%;
+	margin-left: 16rpx;
+	align-self: center;
+}
+
+.scroll-item-create-info {
+	padding-left: 28rpx;
+	font-size: 16px;
+	color: #949494;
+}
+
+
+.statusText {
+	height: 40px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	font-size: 30rpx;
+}

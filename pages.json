@@ -1,0 +1,129 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/main/main",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+            "path" : "pages/main/news/news",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }, {
+			"path": "pages/social/social",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/message/message",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
+			"path": "pages/user/user",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}
+	    
+        ,{
+            "path" : "pages/user/login/login",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/setting/setting",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/register/register",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/findPwd/findPwd",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/editInfo/editInfo",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uManager/uManager",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uPermission/uPermission",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uNews/uNews",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uReview/uReview",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uTeam/uTeam",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uLog/uLog",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+    ],
+	"tabBar": {
+		"color": "#7a7e83",
+		"selectedColor": "#0faeff",
+		"backgroundColor": "#ffffff",
+		"list": [{
+			"pagePath": "pages/main/main",
+			"text": "首页",
+			"iconPath": "static/img/home_0.png",
+			"selectedIconPath": "static/img/home_1.png"
+		}, {
+			"pagePath": "pages/social/social",
+			"text": "社交",
+			"iconPath": "static/img/social_0.png",
+			"selectedIconPath": "static/img/social_1.png"
+		}, {
+			"pagePath": "pages/message/message",
+			"text": "消息",
+			"iconPath": "static/img/message_0.png",
+			"selectedIconPath": "static/img/message_1.png"
+		}, {
+			"pagePath": "pages/user/user",
+			"text": "我的",
+			"iconPath": "static/img/mine_0.png",
+			"selectedIconPath": "static/img/mine_1.png"
+		}]
+	},
+	"globalStyle": {
+		
+		"navigationBarTextStyle": "white",
+		"navigationBarBackgroundColor": "#0faeff",
+		"backgroundColor": "#F8F8F8"
+	}
+}
