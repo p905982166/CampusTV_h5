@@ -92,6 +92,9 @@
 				})
 			},
 			logout(){
+				uni.showLoading({
+					title:'请等待...'
+				})
 				var _this = this;
 				uni.request({
 					url:'/controller/sys_user/logout',
@@ -99,6 +102,7 @@
 					data: { u_id: _this.userId},
 					header:{'Content-type':'application/x-www-form-urlencoded'},
 					success(res) {
+						uni.hideLoading();
 						let data = res.data;
 						if(data.state !== '200'){
 							uni.showToast({

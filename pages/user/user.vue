@@ -135,7 +135,7 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	const server = "http://192.168.124.114:8888/";
+	const server = "http://127.0.0.1:8888/";
 	export default {
 		computed: mapState(['isLogin', 'userId', 'userInfo','statusBarHeight', 'userPermission']),
 		data(){

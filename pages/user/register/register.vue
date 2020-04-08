@@ -94,12 +94,17 @@
 				safeCode:'',
 				btRegister:'bt-register-false',
 				btRegisterDisable:true,
+				canSendMsg:true,
 			}
 		},
 		methods: {
 			...mapMutations(['initUserState','changeRegisterState','registerToLogin']),
 			getSafeCode(){
 				var _this = this;
+				if(!_this.canSendMsg){
+					return;
+				}
+				_this.canSendMsg = false;
 				if(this.telephone.length !== 11) {
 					uni.showToast({
 						title:'请确保手机号码位11为数字',
@@ -113,7 +118,7 @@
 						data: { tel: _this.telephone},
 						header:{'Content-type':'application/x-www-form-urlencoded'},
 						success(res) {
-							
+							_this.canSendMsg = true;
 							let data = res.data;
 							if(data.state !== '200'){
 								uni.showToast({
@@ -126,6 +131,7 @@
 							
 						},
 						fail(err) {
+							_this.canSendMsg = true;
 							uni.showToast({
 								title:'访问失败，请检查网络',
 								icon: 'none',
@@ -158,6 +164,7 @@
 							getBtDisabled = true;
 						} else {          
 							getBtDisabled = false;
+							clearInterval(timer);
 							timer = null;        
 							countdownText = '';
 							clearInterval(_this.registerTimer);       

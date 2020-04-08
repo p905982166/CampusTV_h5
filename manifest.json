@@ -82,7 +82,7 @@
 			"disableHostCheck": true, // 禁用 Host 检查
 			"proxy": {
 				"/controller": {
-					"target": "http://192.168.124.114:8888/",
+					"target": "http://127.0.0.1:8888/",
 					"changeOrigin": true,
 					"secure": false,
 					"pathRewrite":{"^/controller":""}
@@ -90,7 +90,7 @@
 			}
 			//配置完成后重启项目
         },
-        "domain" : "http://192.168.124.114:8888/",
+        "domain" : "http://127.0.0.1:8888/",
 		"async":
 		{ //页面js异步加载配置
 			"delay": 100000,

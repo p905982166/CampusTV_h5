@@ -16,6 +16,9 @@ var interfaces = {
 	newsList: {
 		getInitNews: `${baseUrl}/news/getInitNews`
 	},
+	myNewsList: {
+		getMyNews: `${baseUrl}/news/getMyNews`
+	},
 }
 
 module.exports = interfaces;

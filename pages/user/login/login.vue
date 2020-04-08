@@ -96,13 +96,34 @@
 						uni.hideLoading();
 						let data = res.data;
 						if(data.state !== '200'){
-							uni.showToast({
-								title: data.msg,
-								icon:'none',
-								complete() {
-									_this.password = '';
+							if(data.state === '2081'){
+								let title = '';
+								if(data.status === 4){
+									title = '该账号被暂时限制登录'
 								}
-							})
+								if(data.status === 5){
+									title = '该账号被冻结'
+								}
+								if(data.status === 6){
+									title = '该账号已被封停'
+								}
+								uni.showToast({
+									title: title,
+									icon:'none',
+									complete() {
+										_this.password = '';
+									}
+								})
+							}else{
+								uni.showToast({
+									title: data.msg,
+									icon:'none',
+									complete() {
+										_this.password = '';
+									}
+								})
+							}
+							
 						}else{
 							
 							let userState = {"isLogin" : false, "userId" : 0, "userInfo" : {}, "userPermission":{}};

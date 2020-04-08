@@ -36,6 +36,7 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 		fail,	//接口访问失败回调
 		
 		sendDataName,	//携带数据字段名称
+		pageType,
 		
 		setName,	//页面中列表数据字段名称, 如果在页面中分别有两个或两个以上列表使用该js, 则页面中需区分传入, 否则可以忽略
 		statusTextName,	//页面中列表状态字段名称, 如果在页面中分别有两个或两个以上列表使用该js, 则页面中需区分传入, 否则可以忽略
@@ -66,6 +67,7 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	
 	//初始化默认值
 	sendDataName = sendDataName || 'sendData';
+	pageType = pageType || 'pageType';
 	setName = setName || 'list';
 	statusTextName = statusTextName || 'statusText';
 
@@ -78,9 +80,12 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	}
 	
 	//浅拷贝携带数据对象
-	const sendData = { ..._this[sendDataName]
-	};
+	const sendData = { ..._this[sendDataName]};
+	const type = _this[pageType];
+	
 	_app.log('sendData: ' + JSON.stringify(sendData));
+	_app.log("type: " + type);
+	
 	_app.log('subTypeId: ' + sendData.sub_type_id);
 	
 	let status;	//声明 列表状态变量
@@ -89,9 +94,9 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	// 等待标识
 	_this[waitingName] = true;
 	_app.log('准备访问接口:' + JSON.stringify(sendData));
-	// 访问接口    ->getTabList
-	getDataFn({ ...sendData
-	}).then(res => {
+	// 访问接口    ->getTabList.js
+	getDataFn({ ...sendData}, type).then(res => {
+		
 		if(success && typeof success == 'function') success(res);
 		_app.log('page.js获取数据成功:' + JSON.stringify(res));
 		

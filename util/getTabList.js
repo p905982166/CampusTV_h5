@@ -1,12 +1,26 @@
 import { QSRequest } from '@/util/request/QS-request.js';
-function getTabList(data) {
-	console.log(1221312312)
-	return QSRequest({
-		urlField: 'newsList.getInitNews',
-		sendData: data,
-		field: 'page',
-		filterFn: filterTabList
-	});
+function getTabList(data, pageType) {
+	
+	if(pageType === 1){
+		//从首页进来
+		console.log('调用获取首页新闻api')
+		return QSRequest({
+			urlField: 'newsList.getInitNews',
+			sendData: data,
+			field: 'page',
+			filterFn: filterTabList
+		});
+	}else if(pageType === 2){
+		//从我的新闻进来
+		console.log('调用我的新闻api')
+		return QSRequest({
+			urlField: 'myNewsList.getMyNews',
+			sendData: data,
+			field: 'page',
+			filterFn: filterTabList
+		});
+	}
+	
 }
 
 function filterTabList(page) {	//过滤数据

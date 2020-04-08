@@ -71,12 +71,16 @@
 			  }
 		},
 		onLoad() {
+			uni.showLoading({
+				title:'数据加载中...'
+			})
 			var _this = this;
 			uni.request({
 				url:'/controller/sys_user/query_self_log',
 				method:'POST',
 				header:{'Content-type':'application/x-www-form-urlencoded'},
 				success(res) {
+					uni.hideLoading();
 					let data = res.data;
 					if(data.state !== '200'){
 						uni.showToast({
@@ -84,7 +88,9 @@
 							icon:'none'
 						})
 					}else{
+						
 						_this.logs = data.user_logs;
+						
 					}
 				},
 				fail(err){

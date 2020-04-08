@@ -147,7 +147,7 @@ function request(obj) {
 					}
 				},
 				fail(err) {
-					console.log("QS-request 133 " + res.data)
+					console.log("QS-request 133 " + err)
 					reject(err)
 				}
 			});

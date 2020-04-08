@@ -52,8 +52,43 @@
 			</view>
 			
 			<view class="main-body-users">
-				{{ users }}
+				<t-table @change="change">
+					<t-tr>
+						<t-th>编号</t-th>
+						<t-th>昵称</t-th>
+						<t-th>状态</t-th>
+						<t-th>操作</t-th>
+					</t-tr>
+					<t-tr v-for="item in users" :key="item.id">
+						<t-td>{{ item.userId }}</t-td>
+						<t-td>{{ item.userNick }}</t-td>
+						<t-td>{{ getStatusString(item.userStatus) }}</t-td>
+						<t-td><button @click="edit(item)">编辑</button></t-td>
+					</t-tr>
+				</t-table>
 			</view>
+			<uni-popup ref="popup" type="center">
+				<radio-group @change="managerMethodChange" class="pop-column">
+					<label class="pop-item">
+						<radio value="0" :checked="managerMethod === 0"/>
+						<text class="pop-item-text">正常</text>
+					</label>
+					<label class="pop-item">
+						<radio value="1" :checked="managerMethod === 1"/>
+						<text class="pop-item-text">限制登录</text>
+					</label>
+					<label class="pop-item">
+						<radio value="2" :checked="managerMethod === 2"/>
+						<text class="pop-item-text">冻结</text>
+					</label>
+					<label class="pop-item">
+						<radio value="3" :checked="managerMethod === 3"/>
+						<text class="pop-item-text">封禁</text>
+					</label>
+					<button class="pop-bt-alter" @click="postAlter">确定</button>
+				</radio-group>
+			</uni-popup>
+			
 		</view>
 	</view>
 </template>
@@ -63,15 +98,25 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	
+	import tTable from '../../../components/t-table/t-table.vue';
+	import tTh from '../../../components/t-table/t-th.vue';
+	import tTr from '../../../components/t-table/t-tr.vue';
+	import tTd from '../../../components/t-table/t-td.vue';
+	import uniPopup from "@/components/uni-popup/uni-popup.vue"
 	export default {
-		
+		components: {
+			tTable,
+			tTh,
+			tTr,
+			tTd,
+			uniPopup
+		},
 		computed: mapState(['isLogin', 'userId','userInfo','statusBarHeight']),
 		data() {
 			return {
 				methodIndex: 0,
 				selectMethod:[
-					{name:'未选择', method: 0},
+					{name:'点击选择', method: 0},
 					{name:'用户编号', method: 1},
 					{name:'用户状态', method: 2}
 				],
@@ -89,7 +134,9 @@
 					{name:'封禁', status: 7},
 				],
 				
-				users: '',
+				users: [],
+				userSelected : 0,
+				managerMethod: 0,
 			}
 		},
 		
@@ -100,6 +147,10 @@
 			},
 			userStatusChange(e){
 				this.userStatusIndex = e.detail.value;
+			},
+			managerMethodChange(e){
+				console.log(e.detail.value);
+				this.managerMethod = e.detail.value;
 			},
 			getTargetStatus(){
 				var _this = this;
@@ -124,6 +175,9 @@
 				this.queryUsers(data);
 			},
 			queryUsers(data){
+				uni.showLoading({
+					title:'加载中'
+				})
 				var _this = this;
 				uni.request({
 					url:'/controller/sys_user/query_user_status',
@@ -138,7 +192,75 @@
 								icon:'none'
 							})
 						}else{
-							_this.users = data;
+							_this.users = data.list;
+							uni.hideLoading();
+						}
+					},
+					fail(err){
+						uni.showToast({
+							title:'访问失败，请检查网络',
+							icon: 'none',
+						})
+					},
+				})
+			},
+			change(e) {
+				console.log(e.detail);
+			},
+			edit(item) {
+				console.log(item.userId);
+				this.userSelected = item.userId;
+				this.$refs.popup.open()
+			},
+			getStatusString(status){
+				let statusStr = '';
+				switch(status){
+					case 0: statusStr = '离线';
+						break;
+					case 1: statusStr = '在线';
+						break;
+					case 2: statusStr = '忙碌';
+						break;
+					case 3: statusStr = '请勿打扰';
+						break;
+					case 4: statusStr = '限制登录';
+						break;
+					case 5: statusStr = '冻结';
+						break;
+					case 6: statusStr = '封禁';
+						break;
+				}
+				return statusStr;
+			},
+			postAlter(){
+				var _this = this;
+				var data = {
+					u_id: _this.userSelected,
+					method: _this.managerMethod
+				}
+				console.log(data);
+				uni.request({
+					url:'/controller/sys_user/alterUserStatus',
+					method:'POST',
+					data: data,
+					header:{'Content-type':'application/x-www-form-urlencoded'},
+					success(res) {
+						let data = res.data;
+						if(data.state !== '200'){
+							uni.showToast({
+								title: data.msg,
+								icon:'none'
+							})
+						}else{
+							uni.showToast({
+								title: "修改成功",
+							})
+							if(_this.methodIndex === 1){
+								_this.getTargetStatus();
+							}else{
+								_this.getRangeStatus();
+							}
+							_this.$refs.popup.close();
 						}
 					},
 					fail(err){
@@ -208,5 +330,27 @@
 		padding-left: 20rpx;
 		height: 50rpx;
 		width: 50rpx;
+	}
+	.main-body-users{
+		padding: 40rpx;
+	}
+	
+	.pop-column{
+		background-color: #FFFFFF;
+		border-radius: 8rpx;
+		display: flex;
+		flex-direction: column;
+		padding: 80px;
+	}
+	.pop-item{
+		margin-bottom: 14px;
+	}
+	.pop-item-text{
+		padding-left: 10px;
+	}
+	.pop-bt-alter{
+		background-color: #007AFF;
+		margin-top: 10px;
+		width: 100%;
 	}
 </style>

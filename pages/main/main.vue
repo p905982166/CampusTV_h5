@@ -14,10 +14,7 @@
 				</view>
 			</view>
 			
-		<view class="scroll-item" v-for="(item, index) in tabType" :key="index">
-				<!-- <view v-show="tabTypeIndex === index">
-					{{item.typeName}}
-				</view> -->
+			<view class="scroll-item" v-for="(item, index) in tabType" :key="index">
 				
 				<QSTabsWxs v-show="tabTypeIndex === index"
 				:ref="`qs${index}`"
@@ -107,6 +104,7 @@
 						tablist,
 						name,
 						id: tablist.subTypeId,
+						type: 1,
 						swiperBackgroundColor: '#F5F5F5',
 						lineColor: '#000000',
 						tabsBackgroundColor: '#ffffff'

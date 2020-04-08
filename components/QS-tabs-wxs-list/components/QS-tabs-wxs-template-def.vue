@@ -15,7 +15,7 @@
 							<view class="scroll-item-detail-text">
 								{{item.newsTitle}}
 							</view>
-							<image lazy-load class="scroll-item-detail-image" src="http://192.168.124.114:8888/api/uploadFiles/users/1/headImage/5.jpg"
+							<image lazy-load class="scroll-item-detail-image" src="http://127.0.0.1:8888/api/uploadFiles/users/1/headImage/5.jpg"
 							 mode="scaleToFill"></image>
 							 
 						</view>
@@ -51,9 +51,8 @@
 			return {
 				list: [],
 				sendData: {
-					
-					sub_type_id: this.tab.id
 				},
+				pageType:0,
 				statusText: {},
 				refreshClear: false
 			}
@@ -87,27 +86,58 @@
 			getList(refresh, doEvent, force) {
 				let _this = this;
 				console.log(refresh);
+				this.pageType = this.tab.type;
 				
-				if(refresh == undefined){
-					//第一次获取
-					console.log("TAG","第一次获取");
-				}else if(refresh){
-					console.log("TAG","尝试重新获取");
-					if(this.list.length !== 0){
-						console.log("TAG","下拉加载");
-						this.sendData.init_type = 1;
-						this.sendData.news_id = this.list[0].newsId;
-					}
-				}else if(!refresh){
-					console.log("TAG","尝试重新获取");
-					if(this.list.length !== 0){
-						console.log("TAG","上拉加载");
-						this.sendData.init_type = 2;
-						this.sendData.news_id = this.list[this.list.length - 1].newsId;
-					}
+				if(this.pageType === 1){
+					//从首页进来的
+					console.log("从首页进来的")
+					this.sendData.sub_type_id = this.tab.id
 					
-				};
-				
+					if(refresh == undefined){
+						//第一次获取
+						console.log("TAG","第一次获取");
+					}else if(refresh){
+						console.log("TAG","尝试重新获取");
+						if(this.list.length !== 0){
+							console.log("TAG","下拉加载");
+							this.sendData.init_type = 1;
+							this.sendData._id = this.list[0].newsId;
+						}
+					}else if(!refresh){
+						console.log("TAG","尝试重新获取");
+						if(this.list.length !== 0){
+							console.log("TAG","上拉加载");
+							this.sendData.init_type = 2;
+							this.sendData.news_id = this.list[this.list.length - 1].newsId;
+						}
+						
+					};
+				}else if(this.pageType === 2){
+					//从我的新闻里面进来的
+					console.log("从我的新闻里面进来的")
+					this.sendData.type_id = this.tab.id
+					
+					if(refresh == undefined){
+						//第一次获取
+						console.log("TAG","第一次获取");
+					}else if(refresh){
+						console.log("TAG","尝试重新获取");
+						if(this.list.length !== 0){
+							console.log("TAG","下拉加载");
+							this.sendData.init_type = 1;
+							this.sendData.my_id = this.list[0].myId;
+						}
+					}else if(!refresh){
+						console.log("TAG","尝试重新获取");
+						if(this.list.length !== 0){
+							console.log("TAG","上拉加载");
+							this.sendData.init_type = 2;
+							this.sendData.my_id = this.list[this.list.length - 1].myId;
+							console.log("myId",this.list[this.list.length - 1].myId);
+						}
+						
+					};
+				}
 				
 				doPageDemand.call(this, {
 					getDataFn: getTabList, //获取数据的方法
@@ -119,6 +149,7 @@
 					}, //接口访问失败回调
 
 					sendDataName: 'sendData', //携带数据字段名称
+					pageType: 'pageType',
 
 					setName: 'list', //页面中列表数据字段名称, 如果在页面中分别有两个或两个以上列表使用该js, 则页面中需区分传入, 否则可以忽略
 					statusTextName: 'statusText', //页面中列表状态字段名称, 如果在页面中分别有两个或两个以上列表使用该js, 则页面中需区分传入, 否则可以忽略
@@ -139,7 +170,7 @@
 				// 	title: `第${this.index}列 第${ind}项 `
 				// });
 				uni.navigateTo({
-				    url: 'news/news?newsId=' + this.list[ind].newsId
+				    url: '../../../pages/main/news/news?newsId=' + this.list[ind].newsId
 				});
 				
 			}
