@@ -105,6 +105,7 @@
 						name,
 						id: tablist.subTypeId,
 						type: 1,
+						userId: this.userId,
 						swiperBackgroundColor: '#F5F5F5',
 						lineColor: '#000000',
 						tabsBackgroundColor: '#ffffff'

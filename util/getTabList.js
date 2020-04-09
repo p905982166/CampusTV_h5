@@ -1,5 +1,5 @@
 import { QSRequest } from '@/util/request/QS-request.js';
-function getTabList(data, pageType) {
+function getTabList(data, pageType, userId) {
 	
 	if(pageType === 1){
 		//从首页进来
@@ -11,6 +11,28 @@ function getTabList(data, pageType) {
 			filterFn: filterTabList
 		});
 	}else if(pageType === 2){
+		if(data.type_id === 1){
+			//浏览历史
+			
+			return new Promise((resolve, reject) => {
+				//从storage里面拿数据
+				let list = uni.getStorageSync("browserHistory");
+				
+				let tempList = [];
+				for (var i = 0; i < list.length; i++) {
+					if(list[i].userId === userId){
+						tempList = list[i].list;
+						break;
+					}
+				}
+				let size = tempList===undefined?0:tempList.length;
+				let res = {tag: 1, size: size, list: tempList}
+				resolve(res);
+				
+			})
+			
+			
+		}
 		//从我的新闻进来
 		console.log('调用我的新闻api')
 		return QSRequest({

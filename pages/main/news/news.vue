@@ -17,9 +17,19 @@
 		</view>
 		
 		<view class="main-body">
-			statusBarHeight: {{statusBarHeight}}
-			newsId: {{newsId}}
-			newsDetail: {{newsDetail}}
+			<view class="main-body-news-title"> {{ newsDetail.newsTitle }} </view>
+			<view class="main-body-news-create">
+				<view class="main-body-news-create-date">来自：</view>
+				<view class="main-body-news-create-by">{{createByNick}}</view>
+			</view>
+			<view class="main-body-news-create">
+				<view class="main-body-news-create-date">坐标：</view>
+				<view class="main-body-news-create-by">{{belongCampus}}</view>
+			</view>
+			<view class="main-body-news-create">
+				<view class="main-body-news-create-date">时间：</view>
+				<view class="main-body-news-create-by">{{createDate}}</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -33,7 +43,9 @@
 		computed: mapState(['statusBarHeight']),
 		data() {
 			return {
-				
+				createByNick: '',
+				belongCampus: '',
+				createDate: '',
 				newsId: 0,
 				newsDetail : '',
 			}
@@ -51,7 +63,10 @@
 						var dat = res.data;
 						if(dat.state === '200'){
 							console.log(dat);
-							_this.newsDetail = dat;
+							_this.newsDetail = dat.news_detail;
+							_this.createByNick = dat.userNick;
+							_this.belongCampus = dat.campusName;
+							_this.createDate = dat.createDate;
 						}
 					},
 					fail(err) {
@@ -73,6 +88,36 @@
 </script>
 
 <style>
-	
+	.main-body{
+		height: 100%;
+		
+		position: absolute;
+		background-color: #ffffff;
+		display: flex;
+		flex-direction: column;
+		padding-left: 20px;
+		padding-right: 20px;
+	}
+	.main-body-news-title{
+		font-size: 23px;
+		padding-top: 20px;
+		padding-bottom: 10px;
+	}
+	.main-body-news-create{
+		display: flex;
+		flex-direction: row;
+	}
+	.main-body-news-create-by{
+		padding-top: 10px;
+		font-size: 13px;
+		color: #4c7eff;
+	}
+	.main-body-news-create-date{
+		padding-right: 9rpx;
+		padding-left: 19rpx;
+		padding-top: 10px;
+		font-size: 13px;
+		color: #606160;
+	}
 
 </style>

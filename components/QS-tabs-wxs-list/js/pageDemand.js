@@ -37,6 +37,7 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 		
 		sendDataName,	//携带数据字段名称
 		pageType,
+		userId,
 		
 		setName,	//页面中列表数据字段名称, 如果在页面中分别有两个或两个以上列表使用该js, 则页面中需区分传入, 否则可以忽略
 		statusTextName,	//页面中列表状态字段名称, 如果在页面中分别有两个或两个以上列表使用该js, 则页面中需区分传入, 否则可以忽略
@@ -68,6 +69,7 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	//初始化默认值
 	sendDataName = sendDataName || 'sendData';
 	pageType = pageType || 'pageType';
+	userId = userId || 'userId';
 	setName = setName || 'list';
 	statusTextName = statusTextName || 'statusText';
 
@@ -82,9 +84,11 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	//浅拷贝携带数据对象
 	const sendData = { ..._this[sendDataName]};
 	const type = _this[pageType];
+	const u_id = _this[userId];
 	
 	_app.log('sendData: ' + JSON.stringify(sendData));
 	_app.log("type: " + type);
+	_app.log("userId: " + u_id);
 	
 	_app.log('subTypeId: ' + sendData.sub_type_id);
 	
@@ -95,7 +99,7 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 	_this[waitingName] = true;
 	_app.log('准备访问接口:' + JSON.stringify(sendData));
 	// 访问接口    ->getTabList.js
-	getDataFn({ ...sendData}, type).then(res => {
+	getDataFn({ ...sendData}, type, u_id).then(res => {
 		
 		if(success && typeof success == 'function') success(res);
 		_app.log('page.js获取数据成功:' + JSON.stringify(res));
@@ -107,14 +111,35 @@ function doPageDemand(obj) {	//分页加载获取数据方法, 页面使用call�
 				//第一次获取
 				_app.log("第一次获取");
 				_this[setName] = newLists;
+				status = getStatus('getMore');
 			}else if(refresh){
-				_app.log("下拉刷新");
-				_this[setName] = newLists.concat(_this[setName]);
+				
+				if(res.tag === 1){
+					//表示浏览历史
+					_app.log("下拉刷新浏览历史");
+					_this[setName] = newLists;
+				}else{
+					_app.log("下拉刷新");
+					_this[setName] = newLists.concat(_this[setName]);
+				}
+				status = getStatus('getMore');
 			}else if(!refresh){
-				_app.log("上拉加载");
-				_this[setName] = _this[setName].concat(newLists);
+				if(res.tag === 1){
+					//表示浏览历史
+					_app.log("上拉刷新浏览历史");
+					_this[setName] = newLists;
+					//暂无数据
+					status = getStatus('noData', noDataText||'');
+					_app.log("暂无数据");
+				}else{
+					_app.log("上拉加载");
+					_this[setName] = _this[setName].concat(newLists);
+					status = getStatus('getMore');
+				}
+				
 			};
-			status = getStatus('getMore');
+			//status = getStatus('getMore');
+			
 		}else{
 			//暂无数据
 			status = getStatus('noData', noDataText||'');

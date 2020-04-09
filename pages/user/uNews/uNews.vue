@@ -31,7 +31,7 @@
 			minWidth="50rpx" 
 			type="index"
 			defCurrent="0"
-			:height="windowHeight">
+			:height="windowHeight + QSTabsWxsListHeight">
 			</QSTabsWxs>
 		</view>
 	</view>
@@ -54,23 +54,35 @@
 		computed: mapState(['isLogin', 'userId','userInfo','statusBarHeight','userPermission']),
 		data() {
 			return {
-				topViewHeight: 44,
+				
 				windowHeight,
-				QSTabsWxsListHeight: 20,
+				QSTabsWxsListHeight: 40,
 				tabTypeIndex : 0,
 				tablist:[
 					{name:'浏览过', id:1},
 					{name:'评论过', id:2},
 					{name:'表态过', id:3},
-					{name:'发布的', id:4},
+					{name:'已发布', id:4},
+					{name:'未发布', id:5},
+					{name:'审核中', id:6},
+					{name:'未通过', id:7},
 				],
 			}
 		},
 		onReady() {
 			var that = this;
-						
+			
 			let m = 0;
-			let tabs = Array(that.tablist.length).fill('').map(() => {
+			let length = 0;
+			
+			if(this.userPermission.createNews === 1){
+				console.log("有发布新闻的权限");
+				length = that.tablist.length;
+			}else{
+				console.log("无发布新闻的权限");
+				length = that.tablist.length - 1;
+			}
+			let tabs = Array(length).fill('').map(() => {
 				const tablist = that.tablist[m++];
 				const name = tablist.name;
 				return {
@@ -78,6 +90,7 @@
 					name,
 					id: m,
 					type: 2,
+					userId: that.userId,
 					swiperBackgroundColor: '#F5F5F5',
 					lineColor: '#000000',
 					tabsBackgroundColor: '#ffffff'
