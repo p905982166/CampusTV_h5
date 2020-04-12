@@ -41,6 +41,15 @@ function getTabList(data, pageType, userId) {
 			field: 'page',
 			filterFn: filterTabList
 		});
+	}else if(pageType === 3){
+		//从审核新闻进来
+		console.log('调用获取审核任务信息api')
+		return QSRequest({
+			urlField: 'myNewsList.getMyReviewNewsInfo',
+			sendData: data,
+			field: 'page',
+			filterFn: filterTabList
+		});
 	}
 	
 }

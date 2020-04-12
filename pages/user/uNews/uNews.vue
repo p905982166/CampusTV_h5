@@ -67,6 +67,7 @@
 					{name:'审核中', id:6},
 					{name:'未通过', id:7},
 				],
+				pageBack: null,
 			}
 		},
 		onReady() {
@@ -80,7 +81,7 @@
 				length = that.tablist.length;
 			}else{
 				console.log("无发布新闻的权限");
-				length = that.tablist.length - 1;
+				length = that.tablist.length - 4;
 			}
 			let tabs = Array(length).fill('').map(() => {
 				const tablist = that.tablist[m++];
@@ -101,6 +102,19 @@
 			
 			this.$refs['qs'].setTabs(tabs);
 			
+			
+		},
+		onShow(e) {
+			
+			if(this.pageBack !== null){
+				console.log("pageBack",this.pageBack)
+				this.$refs['qs'].delAction(this.pageBack);
+				this.pageBack = null;
+				
+				console.log("pageBack",this.pageBack)
+			}else{
+				console.log("不需要处理")
+			}
 			
 		},
 		methods: {

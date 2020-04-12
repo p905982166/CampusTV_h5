@@ -54,7 +54,7 @@
 			qsTabs,
 			QSTabsWxs,
 		},
-		computed: mapState(['isLogin', 'userId']),
+		computed: mapState(['isLogin', 'userId', 'userPermission']),
 		mounted() {
 			
 		},

@@ -99,6 +99,12 @@
 				"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/user/uReview/news/news",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
     ],
 	"tabBar": {
 		"color": "#7a7e83",

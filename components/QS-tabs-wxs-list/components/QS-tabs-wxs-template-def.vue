@@ -1,7 +1,7 @@
 <!-- 该组件需自行实现, 此处只是示例 -->
 <template>
 	<view class="container" :class="getFixedClass">
-		<view class="container-create-news" v-if="tab.id === 5">
+		<view class="container-create-news" v-if="pageType === 2 && tab.id === 5">
 			<button class="container-create-news-create" @click="createNews">创建</button>
 		</view>
 		<scroll-view scroll-y class="scrollView" lower-threshold="200" :scroll-top="scrollTop" @scroll="scrollFn($event)"
@@ -19,22 +19,25 @@
 							<view class="scroll-item-detail-text">
 								{{item.newsTitle}}
 							</view>
-							<image lazy-load class="scroll-item-detail-image" src="http://127.0.0.1:8888/api/uploadFiles/users/1/headImage/5.jpg"
+							<image lazy-load class="scroll-item-detail-image" :src="'http://192.168.43.249:8888/' + item.newsUrl + item.newsIcon"
 							 mode="scaleToFill"></image>
 							
 						</view>
 						<view class="scroll-item-create-info">{{item.belongToCampus}}&#160; &#160;{{item.createByNick}}&#160; &#160;{{item.dateInfo}}</view>
 					</view>
 					
-					<view v-if="pageType === 2"
+					<view v-if="pageType === 2 || pageType === 3"
 					 class="scroll-item-my" v-for="(item, ind) in list" :key="ind" @tap="itemClick(ind)">
 						<!-- 我的新闻展示样式 -->
+						<text style="padding-left: 10px;" v-if="pageType === 2 && tab.id == 3">
+							我表示很{{ item.description }}
+						</text>
 						<view class="scroll-item-my-detail">
-							<image lazy-load class="scroll-item-my-detail-image" src="http://127.0.0.1:8888/api/uploadFiles/users/1/headImage/5.jpg"
+							<image lazy-load class="scroll-item-my-detail-image" :src="'http://192.168.43.249:8888/' + item.newsUrl + item.newsIcon" 
 							 mode="aspectFit"></image>
 							 
 							<view class="scroll-item-my-detail-text">
-								{{item.newsTitle}}
+								{{formatTitle(item.newsTitle)}}
 							</view>
 							
 						</view>
@@ -99,6 +102,24 @@
 			// console.log('component - created - index:' + this.index);
 		},
 		methods: {
+			formatTitle(title){
+				if(title.length >= 10){
+					let head = title.substr(0,12);
+					let temp = head.concat("......");
+					return temp;
+				}
+				return title;
+			},
+			deleteItem(index){
+				//从CreateNews发布成功到这里，移除从未发布状态变为审核状态的新闻
+				console.log('deleteItem');
+				this.list.splice(index,1);
+			},
+			refreshItem(){
+				//从CreateNews创建成功到这里
+				console.log('refreshItem刷新')
+				this.getList(undefined, false, false)
+			},
 			init(refresh) {	//若是用户触发下拉刷新则refresh为true
 				if (this.refreshClear) this.oldScrollTop = 0;
 				this.getList(refresh, false, false);
@@ -121,15 +142,17 @@
 					if(refresh == undefined){
 						//第一次获取
 						console.log("TAG","第一次获取");
+						this.list.splice(0,this.list.length);
 					}else if(refresh){
-						console.log("TAG","尝试重新获取");
-						if(this.list.length !== 0){
-							console.log("TAG","下拉加载");
-							this.sendData.init_type = 1;
-							this.sendData.news_id = this.list[0].newsId;
-						}
+						console.log("TAG","下拉加载");
+						this.list.splice(0,this.list.length);
+						// if(this.list.length !== 0){
+						// 	console.log("TAG","下拉加载");
+						// 	this.sendData.init_type = 1;
+						// 	this.sendData.news_id = this.list[0].newsId;
+						// }
 					}else if(!refresh){
-						console.log("TAG","尝试重新获取");
+						console.log("TAG","上拉加载");
 						if(this.list.length !== 0){
 							console.log("TAG","上拉加载");
 							this.sendData.init_type = 2;
@@ -144,21 +167,61 @@
 					
 					if(refresh == undefined){
 						//第一次获取
-						console.log("TAG","第一次获取");
+						console.log("第一次获取");
+						this.list.splice(0,this.list.length);
 					}else if(refresh){
-						console.log("TAG","尝试重新获取");
-						if(this.list.length !== 0){
-							console.log("TAG","下拉加载");
-							this.sendData.init_type = 1;
-							this.sendData.my_id = this.list[0].myId;
-						}
+						
+						console.log("尝试重新获取");
+						this.list.splice(0,this.list.length);
+						// if(this.list.length !== 0){
+							
+						// 	console.log("下拉加载");
+						// 	this.sendData.init_type = 1;
+						// 	this.sendData.my_id = this.list[0].myId;
+						// }
 					}else if(!refresh){
-						console.log("TAG","尝试重新获取");
+						console.log("尝试重新获取");
 						if(this.list.length !== 0){
-							console.log("TAG","上拉加载");
+							console.log("上拉加载");
 							this.sendData.init_type = 2;
 							this.sendData.my_id = this.list[this.list.length - 1].myId;
-							console.log("myId",this.list[this.list.length - 1].myId);
+						}
+						
+					};
+				}else if(this.pageType === 3){
+					//从审核新闻里面进来的
+					console.log("从我的新闻里面进来的")
+					this.sendData.type_id = this.tab.id
+					
+					if(refresh == undefined){
+						//第一次获取
+						this.list.splice(0,this.list.length);
+						console.log("第一次获取");
+					}else if(refresh){
+						this.list.splice(0,this.list.length);
+						console.log("尝试重新获取");
+						// if(this.list.length !== 0){
+							
+						// 	console.log("下拉加载");
+						// 	this.sendData.init_type = 1;
+						// 	if(this.tab.id == 2){
+						// 		//历史审核需要将反过来
+						// 		this.sendData.my_id = this.list[this.list.length - 1].myId;
+						// 	}else{
+						// 		this.sendData.my_id = this.list[0].myId;
+						// 	}
+						// }
+					}else if(!refresh){
+						console.log("尝试重新获取");
+						if(this.list.length !== 0){
+							console.log("上拉加载");
+							this.sendData.init_type = 2;
+							if(this.tab.id == 2){
+								//历史审核需要将反过来
+								this.sendData.my_id = this.list[0].myId;
+							}else{
+								this.sendData.my_id = this.list[this.list.length - 1].myId;
+							}
 						}
 						
 					};
@@ -204,15 +267,50 @@
 				
 				console.log(userId);
 				
+				
+				
 				if(this.pageType === 1){
 					uni.navigateTo({
 					    url: './news/news?newsId=' + newsId
 					});
 					
 				}else if(this.pageType === 2){
-					uni.navigateTo({
-					    url: '../../../pages/main/news/news?newsId=' + newsId
-					});
+					if(this.tab.id === 5){
+						//未发布
+						uni.navigateTo({
+							url: './uCreateNews/uCreateNews?newsId=' + newsId +'&index=' + ind
+						});
+						return;
+					}else if(this.tab.id >= 4){
+						uni.navigateTo({
+							url: '../uReview/news/news?newsId=' + newsId +'&index=' + ind + "&ict=71598"
+						});
+					}else if(this.tab.id < 4){
+						uni.navigateTo({
+						    url: '../../../pages/main/news/news?newsId=' + newsId
+						});
+					}
+					
+				}else if(this.pageType === 3){
+					if(this.tab.id == 1){
+						//未审核
+						uni.navigateTo({
+							url: '../uReview/news/news?newsId=' + newsId +'&index=' + ind + "&ict=12937"
+						});
+					}
+					if(this.tab.id == 2){
+						//已审核
+						uni.navigateTo({
+							url: '../uReview/news/news?newsId=' + newsId +'&index=' + ind + "&ict=29374"
+						});
+					}
+					if(this.tab.id == 3){
+						//未分发
+						uni.navigateTo({
+							url: '../uReview/news/news?newsId=' + newsId +'&index=' + ind + "&ict=35125"
+						});
+					}
+					
 				}
 				
 				// [ {userId: 1, list:[]} ]

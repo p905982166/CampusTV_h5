@@ -9,7 +9,7 @@
 		<view class="main-body">
 			<!-- 用户信息 -->
 			<view class="main-body-user">
-				<image class="main-body-user-head" @click="changeHeadImage"
+				<image class="main-body-user-head" @click="selectHeadImage"
 				  :src="user_headImage"
 				  mode="aspectFill"></image>
 				<view class="main-body-user-info" @click="editInfoOrLogin"> 
@@ -135,7 +135,7 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	const server = "http://127.0.0.1:8888/";
+	const server = "http://192.168.43.249:8888/";
 	export default {
 		computed: mapState(['isLogin', 'userId', 'userInfo','statusBarHeight', 'userPermission']),
 		data(){
@@ -169,12 +169,40 @@
 				isMove:false,
 			}
 		},
-		
+		mounted() {
+			window.changeHeadImage = this.changeHeadImage;
+		},
 		methods: {
 		...mapMutations(['initUserState']),
-			changeHeadImage(){
-				console.log('changeHeadImage');
+			changeHeadImage(path){
+				this.user_headImage = "http://androidimg" + path;
 			},
+			selectHeadImage(){
+				
+				if(typeof android === "undefined"){
+					console.log("不是在应用内打开");
+					uni.showToast({
+						title:'请在app内使用',
+						icon:'none'
+					})
+				}else{
+					console.log("调用anroid方法");
+					let cookie = this.getCookie("user_cookie");
+					android.uploadHeadImage(cookie);
+				}
+			},
+			getCookie(cname) {
+		    	var name = cname + "=";
+		    	var ca = document.cookie.split(';');
+		    	for (var i = 0; i < ca.length; i++) {
+		    		var c = ca[i];
+		    		while (c.charAt(0) == ' ') c = c.substring(1);
+		    			if (c.indexOf(name) != -1){
+		    			return c.substring(name.length, c.length);
+		    		}
+		    	}
+		    	return "";
+		    },
 			editInfoOrLogin(){
 				if(this.isLogin){
 					this.editInfo();

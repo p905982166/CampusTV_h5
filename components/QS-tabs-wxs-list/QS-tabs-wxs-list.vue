@@ -393,6 +393,37 @@
 				setTimeout(fn, 0)
 				// fn();
 			},
+			delAction(action){
+				console.log('delAction');
+				console.log(action);
+				console.log('swiperCurrent:' + this.swiperCurrent);
+				
+				//if(this.swiperCurrent === 4){
+					//未发布
+					//父组件更新子组件
+					this.$nextTick(()=>{	//H5需要nextTick后能拿到布局信息
+						setTimeout(()=>{	
+							const ref = this.$refs[this.refPre][this.swiperCurrent];
+							//提交审核
+							if(action.refresh){
+								//刷新
+								const refreshItem = ref['refreshItem'];
+								console.log('刷新的方法')
+								refreshItem();
+								
+							}else if(action.remove){
+								const deleteItem = ref['deleteItem'];
+								console.log('调用移除目标项的方法')
+								deleteItem(action.index);
+							}
+							
+							
+						}, 0)
+					})
+					
+				//}
+				
+			},
 			setTabs(arr) {
 				const fn = ()=>{
 					this.tabs = arr;
