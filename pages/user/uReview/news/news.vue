@@ -117,11 +117,12 @@
 	import {
 		mapState
 	} from 'vuex'
-	
+	import globalUrl from '@/pages/Global.vue'
 	export default {
 		computed: mapState(['isLogin', 'userId', 'userInfo','statusBarHeight', 'userPermission']),
 		data() {
 			return {
+				server: globalUrl.httpUrl,
 				ict:0,
 				newsState: '',
 				lastIndex: -1 , //上个页面传功来的，用于删除item
@@ -135,7 +136,6 @@
 				newsBody : '',
 				videos : '',
 				videoTitle : '',
-				server : 'http://192.168.43.249:8888/',
 				
 				reviewResult: [
 					{status:0, name:'未选择'},

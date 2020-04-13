@@ -23,14 +23,15 @@
 	export default {
 		computed: mapState(['isLogin', 'userId','statusBarHeight']),
 		onShow() {
-			// if(!this.isLogin){
-			// 	console.log("未登录");
-			// 	uni.navigateTo({
-			// 		url: '../user/login/login'
-			// 	})
-			// }else{
-			// 	console.log("已登录");
-			// }
+			if(!this.isLogin || this.userId === 0){
+				console.log("未登录");
+				uni.switchTab({
+					url:'../user/user'
+				})
+				
+			}else{
+				console.log("已登录");
+			}
 		},
 		data(){
 			return {

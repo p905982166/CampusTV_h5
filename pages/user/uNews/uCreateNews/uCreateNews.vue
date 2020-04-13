@@ -124,12 +124,13 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	
+	import globalUrl from '@/pages/Global.vue'
 	export default {
 		
 		computed: mapState(['isLogin', 'userId','userInfo','statusBarHeight']),
 		data() {
 			return {
+				serverUrl: globalUrl.httpUrl,
 				types: [],
 				subTabId: 0,
 				tabTypeIndex:[0, 0],
@@ -212,7 +213,7 @@
 							that.subTabId = detail.subTypesId;
 							that.campusId = detail.belongTo;
 							that.title = detail.newsTitle;
-							let server = "http://192.168.43.249:8888/" + detail.newsUrl;
+							let server = that.serverUrl + detail.newsUrl;
 							that.server = server;
 							if(!detail.newsIcon.startsWith(server)){
 								that.icon = server + detail.newsIcon;
@@ -381,7 +382,7 @@
 			},
 			campusTypeValuechange(e){
 				this.changed = true;
-				console.log(e.target.value);e.target.value;
+				console.log(e.target.value);
 				this.campusTypeIndex = e.target.value;
 				this.campusName = this.campusType[e.target.value].campusName;
 			},

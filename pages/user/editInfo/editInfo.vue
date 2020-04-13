@@ -51,6 +51,16 @@
 						<m-input type="text" :disabled="!isEdit" maxlength="50" :clearable="isEdit" v-model="uSign" placeholder="留下你想说的话语吧~"></m-input>
 					</view>
 					<view class="edit-input-row">
+						所属学校：
+						<picker class="main-body-picker-type" :disabled="!isEdit"
+						 mode="selector" 
+						:range="campusType" range-key="campusName" 
+						:value="campusTypeIndex"
+						@change="campusTypeValuechange">
+							<view>{{ campusType[campusTypeIndex].campusName }}</view>
+						</picker>
+					</view>
+					<view class="edit-input-row">
 						<text>接受陌生人消息：</text>
 						<radio-group @change="agreeChange">
 							<label>
@@ -97,11 +107,43 @@
 				uSign : '',
 				uAgreeUnknows: 1,
 				isAgree : false,
-				uBelongTo : null,
+				
 				isEdit: false,
+				campusType: [{campusId:0, campusName:'请选择'}],
+				campusTypeIndex: 0,
+				campusId: 0,
+				uBelongTo : 0,
 			}
 		},
-		
+		onReady() {
+			//学校
+			var that = this;
+			uni.request({
+				url:'/controller/campus/getCampusLists',
+				method:'GET',
+				success(res) {
+					var dat = res.data;
+					if(dat.state === '200'){
+						console.log(dat.list);
+						console.log("that.uBelongTo",that.uBelongTo);
+						for (var i = 0; i < dat.list.length; i++) {
+							var obj = {campusId:0, campusName:''}
+							obj.campusId = dat.list[i].campusId;
+							obj.campusName = dat.list[i].campusName;
+							that.campusType.push(obj);
+							
+							if(obj.campusId === that.uBelongTo){
+								that.campusTypeIndex = i + 1;
+							}
+						}
+					}
+				},
+				fail(err) {
+					console.log(err)
+				}
+				
+			})
+		},
 		methods: {
 			...mapMutations(['changeUserInfo']),
 			
@@ -125,6 +167,11 @@
 			cancelEdit(){
 				this.isEdit = false;
 			},
+			campusTypeValuechange(e){
+				console.log(e.target.value);
+				this.campusTypeIndex = e.target.value;
+				this.campusName = this.campusType[e.target.value].campusName;
+			},
 			postEdit(){
 				if(this.uNick.length <= 0){
 					uni.showToast({
@@ -138,7 +185,8 @@
 					userNick: this.uNick,
 					userSex: this.uSex,
 					userSign: this.uSign,
-					agreeUnknows: this.uAgreeUnknows
+					agreeUnknows: this.uAgreeUnknows,
+					belongTo: this.campusType[this.campusTypeIndex].campusId
 				}
 				var _this = this;
 				uni.request({
@@ -188,6 +236,7 @@
 			this.uTel = this.userInfo.userTel;
 			this.uNick = this.userInfo.userNick;
 			this.uSex = this.userInfo.userSex;
+			this.uBelongTo = this.userInfo.belongTo;
 			if(this.uSex === 1){
 				this.isBoy = true;
 			}else{
@@ -264,5 +313,18 @@
 	.btn-edit{
 		padding-left: 60px;
 		padding-right: 60px;
+	}
+	.main-body-picker{
+		display: flex;
+		flex-direction: row;
+		padding-top: 26rpx;
+		align-items: center;
+		padding-left: 20px;
+	}
+	.main-body-picker-type{
+		background-color: #ececec;
+		padding-left: 20px;
+		padding-right: 20px;
+		border: 1px #222222 solid;
 	}
 </style>

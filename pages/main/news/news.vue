@@ -102,11 +102,12 @@
 	import {
 		mapState
 	} from 'vuex'
-	
+	import globalUrl from '@/pages/Global.vue'
 	export default {
 		computed: mapState(['isLogin', 'userId','statusBarHeight', 'userPermission']),
 		data() {
 			return {
+				server : globalUrl.httpUrl,
 				createByNick: '',
 				belongCampus: '',
 				createDate: '',
@@ -116,7 +117,7 @@
 				newsBody : '',
 				videos : '',
 				videoTitle : '',
-				server : 'http://192.168.43.249:8888/',
+				
 				lastScroll : 0,
 				
 				smile: '../../../static/smile.png',

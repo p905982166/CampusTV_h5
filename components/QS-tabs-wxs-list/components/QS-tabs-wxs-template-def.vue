@@ -19,7 +19,7 @@
 							<view class="scroll-item-detail-text">
 								{{item.newsTitle}}
 							</view>
-							<image lazy-load class="scroll-item-detail-image" :src="'http://192.168.43.249:8888/' + item.newsUrl + item.newsIcon"
+							<image lazy-load class="scroll-item-detail-image" :src="server + item.newsUrl + item.newsIcon"
 							 mode="scaleToFill"></image>
 							
 						</view>
@@ -33,7 +33,7 @@
 							我表示很{{ item.description }}
 						</text>
 						<view class="scroll-item-my-detail">
-							<image lazy-load class="scroll-item-my-detail-image" :src="'http://192.168.43.249:8888/' + item.newsUrl + item.newsIcon" 
+							<image lazy-load class="scroll-item-my-detail-image" :src="server + item.newsUrl + item.newsIcon" 
 							 mode="aspectFit"></image>
 							 
 							<view class="scroll-item-my-detail-text">
@@ -60,7 +60,7 @@
 <script>
 	// 组件必须
 	import { QSTabsWxsListMixin } from '../mixins/QS-tabs-wxs-list-mixin.js';
-	
+	import globalUrl from '@/pages/Global.vue'
 	import {
 		getTabList
 	} from '@/util/getTabList.js';
@@ -71,6 +71,7 @@
 		mixins: [QSTabsWxsListMixin()],// 组件必须
 		data() {
 			return {
+				server: globalUrl.httpUrl,
 				list: [],
 				sendData: {
 				},

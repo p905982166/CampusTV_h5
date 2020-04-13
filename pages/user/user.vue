@@ -131,15 +131,18 @@
 </template>
 
 <script>
+	import globalUrl from '../Global.vue'
 	import {
 		mapState,
 		mapMutations
 	} from 'vuex'
-	const server = "http://192.168.43.249:8888/";
+	//const server = "http://192.168.43.249:8888/";
 	export default {
 		computed: mapState(['isLogin', 'userId', 'userInfo','statusBarHeight', 'userPermission']),
 		data(){
 			return {
+				server: globalUrl.httpUrl,
+				
 				platform : '',
 				user_headImage : '',
 				user_nick :'',
@@ -385,7 +388,7 @@
 							_this.user_sex = '../../static/ic_female.png';
 						}
 						_this.user_sign = _this.userInfo.userSign !== undefined?_this.userInfo.userSign:'这家伙很懒，什么都没有留下';
-						_this.user_headImage = server +  _this.userInfo.userHeadImage;
+						_this.user_headImage = _this.server +  _this.userInfo.userHeadImage;
 						
 						if(_this.userPermission.managerUser === 1){
 							_this.canUserManager = true;

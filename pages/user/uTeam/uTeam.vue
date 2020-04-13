@@ -33,7 +33,7 @@
 	
 	export default {
 		
-		computed: mapState(['isLogin', 'userId','userInfo','statusBarHeight']),
+		computed: mapState(['isLogin', 'userId','userInfo','statusBarHeight', 'userPermission']),
 		data() {
 			return {
 				
