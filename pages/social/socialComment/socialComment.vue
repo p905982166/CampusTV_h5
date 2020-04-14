@@ -54,7 +54,7 @@
 					:src="likeSrc[likeIndex]">
 					</image>
 					<image 
-					@tap="comment"
+					@tap="comment(0)"
 					src="@/static/comment.png" >
 					</image>
 					
@@ -63,15 +63,40 @@
 					</image>
 				</view>
 				
+				<view class="main-body-social-comments" style="margin-bottom: 15px;">
+					<view style="color: #a3a3a3;padding: 10px 10px;" v-if="commentList.length === 0">
+						快来留下第一条评论吧~
+					</view>
+					<view v-for="(item,index) in commentList" :key="index">
+						<view style="padding: 10px 10px;" @tap="comment(item.socialComments.socialCommentId, item.userNick)">
+							<text style="color: #0c8eff;">{{item.userNick}}：
+							</text>{{item.socialComments.commentBody}}
+						</view>
+						
+						<view v-for="(subItem,index) in item.finalSub" :key="index">
+							<view style="padding: 10px 20px;" @tap="comment(subItem.socialComments.socialCommentId, subItem.userNick)">
+								<text style="color: #0c8eff; padding: 0px 5px;">{{subItem.userNick}} </text> 回复
+								<text style="color: #0c8eff; padding: 0px 5px;">{{subItem.replyToUserNick}}: </text>
+								{{subItem.socialComments.commentBody}}
+							</view>
+						</view>
+					</view>
+					
+				</view>
 				
+				
+	
 				<uni-popup ref="popup" type="bottom" >
 					<view class="comment-edit">
 						<input
+						maxlength="200"
 						class="comment-edit-input"
 						type="text" 
 						v-model="commentBody" 
 						:placeholder="holder" />
-						<button type="default" style="width: 90px;background-color: #00ABEC;">发送</button>
+						<button @click="sendComment"
+						type="default" 
+						style="width: 90px;background-color: #00ABEC;">发送</button>
 					</view>
 				</uni-popup>
 				
@@ -102,6 +127,10 @@
 				
 				commentBody :'',
 				holder:'评论',
+				isReply: 0,
+				replyTo:0,
+				
+				commentList:[],
 				
 			}
 		},
@@ -114,23 +143,115 @@
 				this.likeIndex = 0
 			}
 			console.log(option);
-			console.log(this.socialInfo);
+			this.socialId = this.socialInfo.socialDetail.socialId;
 		},
 		onReady() {
-			var data
+			//获取评论信息
+			this.getCommentData();
+			
 		},
 		methods: {
 			...mapMutations(['initUserState']),
-			comment(target){
+			getCommentData(){
+				//this.commentList.splice(0,this.commentList.length)
+				var data = {
+					social_id: this.socialId,
+				}
+				var _this = this;
+				console.log(data)
+				uni.request({
+					url:'/controller/social/getSocialComment',
+					method:'GET',
+					data:data,
+					success(res) {
+						let data = res.data;
+						console.log(data);
+						if(data.state === '200'){
+							let tempList = JSON.parse( data.list);
+							if(tempList.length !== _this.commentList){
+								_this.commentList = tempList;
+							}
+							
+							console.log(_this.commentList);
+						}
+					},
+					fail() {
+						uni.showToast({
+							title:'网络超时，请检查网络或重试',
+							icon:'none'
+						})
+					}
+				})
+			},
+			comment(target, nick){
+				if(this.userPermission.commentSocial === 0){
+					uni.showToast({
+						title:'没有评论社交动态的权限',
+						icon:'none'
+					})
+					return;
+				}
+				
 				this.$refs.popup.open()
+				this.isReply = 0;
 				if(target === 0){
 					this.holder = '评论'
 				}else{
-					this.holder = '回复 评论'
+					this.holder = '回复 ' + nick;
+					this.isReply = 1;
+					this.replyTo = target;
 				}
+				
+				
+				
 			},
-			send(){
-				this.$refs.popup.close()
+			sendComment(){
+				
+				if(this.commentBody.length <= 0 || this.commentBody === ''){
+					uni.showToast({
+						title:'请输入回复内容',
+						icon:'none'
+					})
+					return;
+				}
+				
+				this.$refs.popup.close();
+				
+				var data = { 
+					social_id: this.socialId,
+					comment_body: this.commentBody,
+					is_reply: this.isReply,
+					reply_to: this.replyTo,
+				}
+				var _this = this;
+				uni.request({
+					url:'/controller/social/commentSocial',
+					method:'POST',
+					data:data,
+					header:{'Content-type':'application/x-www-form-urlencoded'},
+					success(res) {
+						let data = res.data;
+						if(data.state === '200'){
+							uni.showToast({
+								title:'评论成功'
+							})
+							_this.getCommentData();
+						}else{
+							uni.showToast({
+								title:data.msg,
+								icon:'none'
+							})
+						}
+						console.log(data);
+					},
+					fail() {
+						uni.showToast({
+							title:'网络超时，请检查网络或重试',
+							icon:'none'
+						})
+					}
+				})
+				
 			},
 			getArray(str){
 				return JSON.parse(str);

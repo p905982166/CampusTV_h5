@@ -73,7 +73,7 @@
 							<view v-if="parseInt(item.socialDetail.clicks)!==0" style="margin-left: 10px;">
 							{{ item.socialDetail.clicks }}人觉得很赞
 							</view>
-							<view v-if="parseInt(item.socialDetail.comments)!==0" style="margin-left: 10px;">
+							<view @tap="clickComment(index)" v-if="parseInt(item.socialDetail.comments)!==0" style="margin-left: 10px;">
 							{{ item.socialDetail.comments }}条评论
 							</view>
 							<view v-if="parseInt(item.socialDetail.shares)!==0" style="margin-left: 10px;">
@@ -150,6 +150,7 @@
 			
 			if(this.userId != this.lastUserId){
 				//用户状态发生了改变
+				this.lastUserId = this.userId; // 记得改变值
 				console.log("userId",this.userId);
 				console.log("lastUserId",this.lastUserId);
 				console.log("用户状态发生了改变")
@@ -198,13 +199,27 @@
 				
 			},
 			clickComment(index){
+				if(this.isLogin === false || this.userId === 0){
+					uni.showToast({
+						title:'登录后才能查看哦~',
+						icon:'none'
+					})
+					return;
+				}
+				
 				let socialInfo = this.dataList[index];
 				uni.navigateTo({
 					url:'socialComment/socialComment?like='+ this.likes[index].click +'&socialInfo=' + encodeURIComponent(JSON.stringify(socialInfo))
 				})
 			},
 			clickShare(index){
-				
+				if(this.isLogin === false || this.userId === 0){
+					uni.showToast({
+						title:'登录后才能分享哦~',
+						icon:'none'
+					})
+					return;
+				}
 			},
 			getArray(str){
 				return JSON.parse(str);
@@ -322,18 +337,19 @@
 				this._freshing = true;
 				this.bottomStateIndex = 1;
 				var data = null;
-				if(this.isFirstRefresh){
-					data = {  }
-					this.dataList.splice(0,this.dataList.length);
-					this.isFirstRefresh = false;
-				}else{
-					console.log(this.dataList)
-					if(this.dataList.length > 0){
-						data = { social_id: this.dataList[0].socialDetail.socialId, is_refresh:1 }
-					}else{
-						data = { social_id:0, is_refresh:1 }
-					}
-				}
+				this.dataList.splice(0, this.dataList.length);
+				// if(this.isFirstRefresh){
+				// 	data = {  }
+				// 	this.dataList.splice(0,this.dataList.length);
+				// 	this.isFirstRefresh = false;
+				// }else{
+				// 	console.log(this.dataList)
+				// 	if(this.dataList.length > 0){
+				// 		data = { social_id: this.dataList[0].socialDetail.socialId, is_refresh:1 }
+				// 	}else{
+				// 		data = { social_id:0, is_refresh:1 }
+				// 	}
+				// }
 				var _this = this;
 				console.log("data",data)
 				uni.request({
