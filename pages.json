@@ -11,6 +11,11 @@
 				"navigationStyle": "custom"
 			}
         }, {
+            "path" : "pages/contests/contests",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }, {
 			"path": "pages/social/social",
 			"style": {
 				"navigationStyle": "custom"
@@ -117,6 +122,30 @@
 				"navigationStyle": "custom"
 			}
         }
+        ,{
+            "path" : "pages/user/uTeam/uBePlayer/uBePlayer",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uTeam/uCreateTeam/uCreateTeam",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uTeam/uJoinTeam/uJoinTeam",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
+        ,{
+            "path" : "pages/user/uTeam/uTeamInfo/uTeamInfo",
+            "style" : {
+				"navigationStyle": "custom"
+			}
+        }
     ],
 	"tabBar": {
 		"color": "#7a7e83",
@@ -132,6 +161,11 @@
 			"text": "社交",
 			"iconPath": "static/img/social_0.png",
 			"selectedIconPath": "static/img/social_1.png"
+		}, {
+			"pagePath": "pages/contests/contests",
+			"text": "赛事",
+			"iconPath": "static/img/contest_0.png",
+			"selectedIconPath": "static/img/contest_1.png"
 		}, {
 			"pagePath": "pages/message/message",
 			"text": "消息",

@@ -44,7 +44,7 @@
 							{{ item.socialDetail.socialBody }}
 						</view>
 						<uni-grid
-						@change="itemClick"
+						
 						:column="3" 
 						borderColor="#474747" 
 						style="margin-top: 10px;margin-bottom: 20px;">

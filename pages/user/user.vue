@@ -522,9 +522,6 @@
 	}
 
 	.main-body{
-		height: 100%;
-		width: 100%;
-		position: absolute;
 		background-color: #f8f8f8;
 		display: flex;
 		flex-direction: column;
@@ -535,6 +532,7 @@
 		background-color: #ffffff;
 		display: flex;
 		flex-direction: row;
+		padding-top: 20px;
 		margin-bottom: 20rpx;
 		align-items: center;
 	}

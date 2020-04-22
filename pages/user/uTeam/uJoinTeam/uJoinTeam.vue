@@ -5,7 +5,7 @@
 			<!-- 这里是状态栏 -->
 			<view class="main-head-navi">
 				<!-- 导航栏 -->
-				<view class="main-head-navi-title">编辑个人信息</view>
+				<view class="main-head-navi-title">加入队伍</view>
 				<!-- 返回图标需要放在标题下面才能有用 -->
 				<image 
 				@click="appback"
